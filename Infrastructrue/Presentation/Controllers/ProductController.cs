@@ -36,7 +36,7 @@ namespace Presentation.Controllers
 
             return Ok(brands);
         }
-
+         
         //Get All Tyeps
 
         [HttpGet("types")]
