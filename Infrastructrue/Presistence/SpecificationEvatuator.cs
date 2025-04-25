@@ -20,12 +20,22 @@ namespace Presistence
         {
             var query = InputQuery;
             if (spec.Criteria is not null)
-              query = query.Where(spec.Criteria); 
-            
+              query = query.Where(spec.Criteria);
+
+            if (spec.OrderBy is not null)
+                query = query.OrderBy(spec.OrderBy);
+
+            if (spec.OrderByDesc is not null)
+                query = query.OrderByDescending(spec.OrderByDesc);
+
 
             if (spec.IncludeExpressions is not null && spec.IncludeExpressions.Count>0)
              query = spec.IncludeExpressions.Aggregate(query, (CurrentQuery, Exp) => CurrentQuery.Include(Exp));
             
+            if(spec.IsPaginated==true)
+            {
+                query=query.Skip(spec.Skip).Take(spec.Take);
+            }
 
             return query;
         }

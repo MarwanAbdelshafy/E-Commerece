@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Abstraction;
 using Microsoft.AspNetCore.Mvc;
+using Shared;
 using Shared.Dto_s;
 
 namespace Presentation.Controllers
@@ -18,9 +19,9 @@ namespace Presentation.Controllers
 
         [HttpGet]
         //Get  BaseUrl/api/Product
-        public async Task<ActionResult<IEnumerable<ProductDto>>> GetAllProduct()
+        public async Task<ActionResult<PaginatedResult<ProductDto>>> GetAllProduct([FromQuery]ProductQueryParams productQuery)
         {
-            var products =await servicesManager.ProductServices.GetAllProductAsync();
+            var products =await servicesManager.ProductServices.GetAllProductAsync(productQuery);
 
             return Ok(products);
         }
