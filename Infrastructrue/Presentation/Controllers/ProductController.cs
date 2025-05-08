@@ -11,9 +11,8 @@ using Shared.Dto_s;
 namespace Presentation.Controllers
 {
 
-    [ApiController]
-    [Route("api/[Controller]")]
-    public class ProductController(IServicesManager servicesManager): ControllerBase
+    
+    public class ProductController(IServicesManager servicesManager): ApiBaseController
     {
         //Get All Product
 

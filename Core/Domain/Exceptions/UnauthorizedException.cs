@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Contracts
+namespace Domain.Exceptions
 {
-    public interface IDbInializer
+    public class UnauthorizedException(string message="Invalid Email Or Password"):Exception(message)
     {
-        Task InializeAsync();
-        Task IdentityInializeAsync();
-
 
     }
 }

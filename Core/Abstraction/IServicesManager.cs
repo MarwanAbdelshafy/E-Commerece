@@ -10,6 +10,9 @@ namespace Abstraction
     {
         public IProductServices ProductServices { get; }
 
+        public IBsaketServices BasketServices { get; }
+
+        public IAuthenticationServices AuthenticationServices { get; }
 
 
     }
