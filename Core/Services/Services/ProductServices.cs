@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using Abstraction;
 using AutoMapper;
 using Domain.Contracts;
+using Domain.Exceptions;
 using Domain.Models.Products;
 using Services.Specifications;
+using Shared;
 using Shared.Dto_s;
 
 namespace Services
@@ -25,15 +27,20 @@ namespace Services
             return MapperBrans;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAllProductAsync()
+        public async Task<PaginatedResult<ProductDto>> GetAllProductAsync(ProductQueryParams productQuery)
         {
             var _Repository = unitOfWorK.GetRepository<Product, int>();
-            var spcs = new ProductWithBrandAndTypeSpecification();//2 include whitout where
+            var spcs = new ProductWithBrandAndTypeSpecification(productQuery);//2 include whitout where
             var products = await _Repository.GetAllAsync(spcs);
 
             var Mapperproducts = mapper.Map<IEnumerable<Product>, IEnumerable<ProductDto>>(products);
 
-            return Mapperproducts;
+            var CountedProduct = products.Count();
+
+            var CountSpcs = new ProductCountSpesification(productQuery);
+
+            var TotalCount =await _Repository.CountAsync(CountSpcs);
+            return new PaginatedResult<ProductDto>(productQuery.PageIndex, CountedProduct, TotalCount, Mapperproducts);
         }
 
         public async Task<IEnumerable<TypeDto>> GetAllTypesAsync()
@@ -49,7 +56,12 @@ namespace Services
 
         public async Task<ProductDto> GetProductByIdAsync(int id)
         {
-            var Prpduct = await unitOfWorK.GetRepository<Product, int>().GetByIdAsync(id);
+
+            var spec = new ProductWithBrandAndTypeSpecification(id);
+            var Prpduct = await unitOfWorK.GetRepository<Product, int>().GetByIdAsync(spec);
+
+            if (Prpduct is null)
+                throw new ProductNotFoundException(id);
 
             return mapper.Map<Product, ProductDto>(Prpduct);
 

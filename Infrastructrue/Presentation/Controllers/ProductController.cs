@@ -5,22 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using Abstraction;
 using Microsoft.AspNetCore.Mvc;
+using Shared;
 using Shared.Dto_s;
 
 namespace Presentation.Controllers
 {
 
-    [ApiController]
-    [Route("api/[Controller]")]
-    public class ProductController(IServicesManager servicesManager): ControllerBase
+    
+    public class ProductController(IServicesManager servicesManager): ApiBaseController
     {
         //Get All Product
 
         [HttpGet]
         //Get  BaseUrl/api/Product
-        public async Task<ActionResult<IEnumerable<ProductDto>>> GetAllProduct()
+        public async Task<ActionResult<PaginatedResult<ProductDto>>> GetAllProduct([FromQuery]ProductQueryParams productQuery)
         {
-            var products =await servicesManager.ProductServices.GetAllProductAsync();
+            var products =await servicesManager.ProductServices.GetAllProductAsync(productQuery);
 
             return Ok(products);
         }
@@ -36,7 +36,7 @@ namespace Presentation.Controllers
 
             return Ok(brands);
         }
-
+         
         //Get All Tyeps
 
         [HttpGet("types")]
